@@ -1,0 +1,17 @@
+FROM docker.io/debian:bookworm
+
+MAINTAINER AutoMQ for Apache Kafka dev@automq.com
+
+RUN apt-get update && apt-get install -y ca-certificates dnsutils iputils-ping curl wget netcat-openbsd sysstat net-tools htop procps zlib1g vim less openjdk-17-jdk libjemalloc-dev ipset iproute2 && \
+    apt-get clean && rm -rf /var/lib/apt/lists /var/cache/apt/archives
+
+# Do not ask for confirmations when running apt-get, etc.
+ENV DEBIAN_FRONTEND=noninteractive \
+    AWS_DEFAULT_REGION=us-east-1 \
+    KAFKA_JVM_PERFORMANCE_OPTS="-server -XX:+UseZGC -XX:ZCollectionInterval=5"
+
+RUN ln -s /opt/kafka /opt/automq
+WORKDIR /opt/kafka
+
+# This container is intended to be used with mounted volumes from local dev environment
+CMD tail -f /dev/null 

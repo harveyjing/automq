@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  # Override the controller service to use the local development setup
+  controller:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: automq-dev:latest
+    volumes:
+      # Mount the local build output to the container
+      - ${AUTOMQ_BUILD_DIR:-../core/build/distributions/automq}:/opt/kafka
+      # Mount local data directory for persistence
+      - ${AUTOMQ_DATA_DIR:-./dev-data}:/data/kafka
+
+  # Override the broker services to use the local development setup
+  broker1:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: automq-dev:latest
+    volumes:
+      # Mount the local build output to the container
+      - ${AUTOMQ_BUILD_DIR:-../core/build/distributions/automq}:/opt/kafka
+      # Mount local data directory for persistence
+      - ${AUTOMQ_DATA_DIR:-./dev-data}:/data/kafka
+
+  broker2:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    image: automq-dev:latest
+    volumes:
+      # Mount the local build output to the container
+      - ${AUTOMQ_BUILD_DIR:-../core/build/distributions/automq}:/opt/kafka
+      # Mount local data directory for persistence
+      - ${AUTOMQ_DATA_DIR:-./dev-data}:/data/kafka
+
+volumes:
+  # Define the s3_data volume to avoid conflicts when using both compose files
+  s3_data:
+    driver: local 
